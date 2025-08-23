@@ -3,13 +3,41 @@ package forms
 import (
 	"fmt"
 	"net/url"
-	"strings"  
+	"strings"
+	"regexp"
 	"unicode/utf8"
 )
+
+var EmailRX = regexp.MustCompile(
+    `^[a-zA-Z0-9.!#$%&'*+/=?^_` + "`" + `{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$`,
+)
+
 
 type Form struct {
 	url.Values
 	Errors errors
+}
+
+// check for minimal lenght 
+func (f * Form) MinLenght(field string, d int) {
+	value := f.Get(field)
+	if value == ""{
+		return
+	}
+	if utf8.RuneCountInString(value) < d {
+		f.Errors.Add(field, fmt.Sprintf("This field is too short (minimu is %d characters)", d))
+	}
+}
+
+// check that a specific field in the form matches a regular expression
+func (f *Form) MathcesPattern(field string, pattern *regexp.Regexp) {
+	value := f.Get(field)
+	if value == ""{
+		return
+	}
+	if !pattern.MatchString(value) {
+		f.Errors.Add(field, "This field is inval")
+	}
 }
 
 // define func to initialize a custom Form struct
