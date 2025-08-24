@@ -31,10 +31,10 @@ func (app *application) routes() http.Handler {
 
 	// user sign routes
 	mux.Get("/user/signup", dynamicMiddleware.ThenFunc(app.signupUserForm))
-	mux.Get("/user/signup", dynamicMiddleware.ThenFunc(app.signupUser))
+	mux.Post("/user/signup", dynamicMiddleware.ThenFunc(app.signupUser))
 	mux.Get("/user/login", dynamicMiddleware.ThenFunc(app.loginUserForm))
-	mux.Get("/user/login", dynamicMiddleware.ThenFunc(app.loginUser))
-	mux.Get("/user/logout", dynamicMiddleware.ThenFunc(app.logoutUser))
+	mux.Post("/user/login", dynamicMiddleware.ThenFunc(app.loginUser))
+	mux.Post("/user/logout", dynamicMiddleware.ThenFunc(app.logoutUser))
 
 	
 	// создаем сервер файл котороый ищет файлы в указанной директории
